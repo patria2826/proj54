@@ -30,7 +30,7 @@ if (!empty($_SESSION['cart'])) {
 
 ?>
 
-    <div class="container">
+    <div class="container cart_area">
         <?php if (!empty($_SESSION['cart'])): ?>
             <table class="table table-bordered">
                 <thead>
@@ -50,7 +50,8 @@ if (!empty($_SESSION['cart'])) {
                     $item = $cart_data[$k];
                     $total += $item['price'] * $item['qty'];
                     ?>
-                    <tr class="text-center product_item" data-sid="<?= $item['sid'] ?>">
+                    <tr class="text-center product_item" data-sid="<?= $item['sid'] ?>"
+                        id="product_<?= $item['sid'] ?>">
                         <th scope="row"><?= $item['bookname'] ?></th>
                         <td><img src="./imgs/small/<?= $item['book_id'] ?>.jpg" alt=""></td>
                         <td><span class="item_price" data-price="<?= $item['price'] ?>"><?= $item['price'] ?></span>元
@@ -69,7 +70,7 @@ if (!empty($_SESSION['cart'])) {
                 <?php } ?>
                 </tbody>
             </table>
-            <div class="alert alert-success" role="alert">
+            <div class="alert alert-success total_area" role="alert">
                 總計： <span class="price" id="total_price" data-price="<?= $total ?>"></span> 元
             </div>
         <?php else: ?>
@@ -77,30 +78,35 @@ if (!empty($_SESSION['cart'])) {
                 購物車中沒有商品 :)
             </div>
         <?php endif; ?>
+        <?php if (isset($_SESSION['user']) && count($_SESSION['cart'])!=0): ?>
+            <a href="buy.php" class="btn btn-info">購買</a>
+        <?php else: ?>
+            <?php if (count($_SESSION['cart'])!=0): ?>
+                <a href="login.php" class="btn btn-warning">請先登入</a>
+            <?php endif; ?>
+        <?php endif; ?>
     </div>
-<!--    <script>-->
-<!--        var badge_pill = $('.badge-pill');-->
-<!---->
-<!--        function cart_count(obj){-->
-<!--            var k, items=0;-->
-<!--            for(k in obj){-->
-<!--                items += obj[k];-->
-<!--            }-->
-<!--            badge_pill.text(items);-->
-<!--        }-->
-<!---->
-<!--        $.get('cart_sess.php', function(data){-->
-<!--            cart_count(data);-->
-<!--        }, 'json');-->
-<!--    </script>-->
     <script>
         function remove_item(sid) {
             $.get('cart_sess.php', {sid: sid}, function (data) {
-                location.reload();
+                // location.reload();
 
+                $(`#product_${sid}`).remove();
+                cart_count(data);
+                calTotal();
+                upateAllPrice();
 
+                if ($('.product_item').length == 0) {
+                    $('.cart_area').append(`<div class="alert alert-secondary" role="alert">
+                購物車中沒有商品 :)
+            </div>`);
+                    $('table').remove();
+                    $('.total_area').remove();
+
+                }
             }, 'json');
         }
+
         var dallorCommas = function (n) {
             return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
         };
@@ -116,12 +122,12 @@ if (!empty($_SESSION['cart'])) {
             var t_price = $('#total_price');
             var total = 0;
             $('.product_item').each(function () {
-               var price = $(this).find('.item_price').data('price');
-               var qty = $(this).find('.item_qty').val();
+                var price = $(this).find('.item_price').data('price');
+                var qty = $(this).find('.item_qty').val();
 
-               total += price*qty;
+                total += price * qty;
             });
-            t_price.data('price',total);
+            t_price.data('price', total);
         };
 
         $('.item_qty').on('change', function () {

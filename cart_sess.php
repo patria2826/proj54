@@ -11,7 +11,7 @@ if (!empty($sid)) {
     // 如果 sid 有設定時
     if (empty($qty)) {
         // 移除
-        session_unset($_SESSION['cart'][$sid]);
+        unset($_SESSION['cart'][$sid]);
     } else {
 //        update cart
         $_SESSION['cart'][$sid] = $qty;

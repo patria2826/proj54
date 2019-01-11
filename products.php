@@ -57,7 +57,7 @@ print_r($_GET);
             <?php endwhile; ?>
         </div>
     </div>
-    <div class="col-md-9 d-flex flex-md-wrap">
+    <div class="col-md-9 d-flex flex-column">
         <nav class="w-100" aria-label="...">
             <ul class="pagination">
                 <li class="page-item <?= ($pages == 1) ? 'disabled' : '' ?>">
@@ -83,27 +83,30 @@ print_r($_GET);
         <?php if ($p_count_stmt->rowCount() < 1) {
             echo '沒有東東哦 :-(';
         } ?>
+        <div class="rowsss d-flex flex-md-wrap">
+            <?php while ($row = $p_count_stmt->fetch(PDO::FETCH_ASSOC)): ?>
+                <div class="card mx-1 mb-2 product_item" data-sid="<?= $row['sid'] ?>" style="width: 22%;">
+                    <a href="./products.php?sid=<?= $row['sid'] ?>">
+                        <img class="card-img-top"
+                             src="imgs/small/<?= $row['book_id'] ?>.jpg"
+                             alt="Card image cap">
+                    </a>
+                    <div class="card-body">
+                        <a href="./products.php?sid=<?= $row['sid'] ?>"><h5
+                                    class="card-title"><?= $row['bookname']; ?></h5></a>
+                        <p class="card-text"><i class="fas fa-user-tie"></i> <?= $row['author'] ?></p>
 
-        <?php while ($row = $p_count_stmt->fetch(PDO::FETCH_ASSOC)): ?>
-            <div class="card mx-1 mb-2 product_item" data-sid="<?= $row['sid'] ?>" style="width: 22%;">
-                <img class="card-img-top"
-                     src="imgs/small/<?= $row['book_id'] ?>.jpg"
-                     alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title"><?= $row['bookname']; ?></h5>
-                    <p class="card-text"><i class="fas fa-user-tie"></i> <?= $row['author'] ?></p>
+                        <select>
+                            <?php for ($i = 1; $i <= 20; $i++): ?>
+                                <option value="<?= $i ?>"><?= $i ?></option>
+                            <?php endfor; ?>
+                        </select>
 
-                    <select>
-                        <?php for ($i = 1; $i <= 20; $i++): ?>
-                            <option value="<?= $i ?>"><?= $i ?></option>
-                        <?php endfor; ?>
-                    </select>
-
-                    <a href="#" class="btn btn-primary add_to_cart_btn"><i class="fas fa-cart-plus"></i></a>
+                        <a href="#" class="btn btn-primary add_to_cart_btn"><i class="fas fa-cart-plus"></i></a>
+                    </div>
                 </div>
-            </div>
-        <?php endwhile; ?>
-
+            <?php endwhile; ?>
+        </div>
     </div>
     <script>
         $('.add_to_cart_btn').click(function () {
@@ -113,21 +116,21 @@ print_r($_GET);
             $.get('cart_add_sess.php', {sid: sid, qty: qty}, function (dataa) {
                 // alert("thx");
                 cart_count(dataa);
-            },'json');
+            }, 'json');
         });
     </script>
     <script>
         var badge_pill = $('.badge-pill');
 
-        function cart_count(obj){
-            var k, items=0;
-            for(k in obj){
+        function cart_count(obj) {
+            var k, items = 0;
+            for (k in obj) {
                 items += obj[k];
             }
             badge_pill.text(items);
         }
 
-        $.get('cart_add_sess.php', function(data){
+        $.get('cart_add_sess.php', function (data) {
             cart_count(data);
         }, 'json');
     </script>
