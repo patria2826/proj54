@@ -79,7 +79,7 @@ if (!empty($_SESSION['cart'])) {
             </div>
         <?php endif; ?>
         <?php if (isset($_SESSION['user']) && count($_SESSION['cart'])!=0): ?>
-            <a href="buy.php" class="btn btn-info">購買</a>
+            <a href="buy.php" class="btn btn-info buy_btn">購買</a>
         <?php else: ?>
             <?php if (count($_SESSION['cart'])!=0): ?>
                 <a href="login.php" class="btn btn-warning">請先登入</a>
@@ -102,6 +102,7 @@ if (!empty($_SESSION['cart'])) {
             </div>`);
                     $('table').remove();
                     $('.total_area').remove();
+                    $('.buy_btn').remove();
 
                 }
             }, 'json');

@@ -36,6 +36,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="edit_me.php">編輯個人資料</a>
+                            <a class="dropdown-item" href="buy_history.php">訂單</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#">修改密碼(自己做)</a>
                         </div>
