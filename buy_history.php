@@ -1,7 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: student
- * Date: 2019/1/11
- * Time: 下午 12:08
- */
+$page_name = 'buy_history';
+
+require __DIR__ . '/__connect_db.php';
+
+if (!isset($_SESSION['user']['id'])) {
+    header("Location: index.php");
+    exit;
+}
